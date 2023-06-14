@@ -1,0 +1,223 @@
+body{
+    background-image: url('https://rare-gallery.com/uploads/posts/566084-koenigsegg-agera.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+.sito{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vh;
+    background-color: rgba(0, 0, 0, 0.452);
+    border-radius: 10px;
+    padding: 10px;
+    padding-bottom: 5vh;
+    border: 2px solid #ffa500;
+    margin-bottom: 2vh;
+    margin-left: 20vw;
+    margin-right: 20vw;
+}
+h1{
+    font-size: 50px;
+    font-weight: 700;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    background: #CFCF08;
+    background: linear-gradient(to right, #CFCF08 0%, #FFA500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+
+}
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vh;
+}
+
+table{
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+    border-collapse: collapse;
+    width: 100%;
+    color: #fff;
+    font-size: 25px;
+    text-align: center;
+}
+td, th{
+    border: 1px solid #ffa500;
+    padding: 8px;
+    border-radius: 10px;
+}
+
+/* da rivedere*/
+
+input[type=text]{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border-radius: 10px;
+    box-sizing: border-box;
+    border: 2px solid #ffa500;
+    background-color: transparent;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+}
+
+h2{
+    font-size: 30px;
+    font-weight: 700;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    background: #CFCF08;
+    background: linear-gradient(to right, #CFCF08 0%, #FFA500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+label{
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    background: #CFCF08;
+    background: linear-gradient(to right, #CFCF08 0%, #FFA500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+input[type=submit]{
+    width: 100%;
+    background-color: #CFCF08;
+    background: linear-gradient(to right, #CFCF08 0%, #FFA500 100%);
+    color: #fff;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    transition: 0.7s;
+}
+select{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border-radius: 10px;
+    box-sizing: border-box;
+    border: 2px solid #ffa500;
+    background-color: transparent;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+}
+
+input[type=number]{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border-radius: 10px;
+    box-sizing: border-box;
+    border: 2px solid #ffa500;
+    background-color: transparent;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+option{
+    background-color: #000;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+}
+
+input[type=submit]:hover{
+    background-color: #FFA500;
+    background: linear-gradient(to right, #FFA500 0%, #CFCF08 100%);
+    color: #fff;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    scale: 1.1;
+    transition: 0.7s;
+}
+input[type=checkbox] {
+    position: relative;
+      cursor: pointer;
+        -webkit-appearance: none;
+        outline: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 3px;
+        background: #555555;
+        transition: 0.5s;
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        
+}
+input[type=checkbox]:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 0;
+    left: 0;
+    border: 2px solid #555555;
+    border-radius: 3px;
+    background:linear-gradient(to right, #CFCF08 0%, #FFA500 100%);
+    
+}
+input[type=checkbox]:checked:after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 10px;
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    top: 2px;
+    left: 6px;
+}
