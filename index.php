@@ -2,13 +2,13 @@
   error_reporting(E_ALL);
   ini_set('display_errors', 1);
  
-    $servername = "localhost";
+    $servername = "";
         
-    $username = "stage01_user";
+    $username = "";
         
-    $password = "nr_C0h411";
+    $password = "";
         
-    $dbname = "stage01_db";
+    $dbname = "";
         
         
         
