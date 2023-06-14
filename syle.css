@@ -38,8 +38,6 @@ h1{
     background: linear-gradient(to right, #CFCF08 0%, #FFA500 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
-
 }
 form{
     display: flex;

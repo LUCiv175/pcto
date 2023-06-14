@@ -2,13 +2,13 @@
   error_reporting(E_ALL);
   ini_set('display_errors', 1);
  
-    $servername = "localhost";
+    $servername = "";
         
-    $username = "stage01_user";
+    $username = "";
         
-    $password = "nr_C0h411";
+    $password = "";
         
-    $dbname = "stage01_db";
+    $dbname = "";
         
         
         
@@ -35,6 +35,7 @@
     <title>Autonoleggio</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image" href="https://upload.wikimedia.org/wikipedia/it/thumb/e/ed/SSC_Napoli_2007.svg/1200px-SSC_Napoli_2007.svg.png">
+    
 </head>
 
 <body>
@@ -67,9 +68,8 @@
         <input type="submit" name="submitElimina" value="Elimina" id="elimina">-->
     </form>
     <form action="index.php" method="post">
-        <!-- search by targa
         <input type="text" name="Ricerca" required><br>
-        <input type="submit" name="submitRicerca" value="Ricerca">-->
+        <input type="submit" name="submitRicerca" value="Ricerca">
     </form>
     <!--show all cars
     <form action="index.php" method="post">
@@ -253,7 +253,7 @@
             echo "Errore nell'inserimento dei dati: " . mysqli_error($conn) . "<br>";
 
         }
-        printCars($conn);
+        //printCars($conn);
 
         /*
         $content = add($targa, 6);
@@ -291,22 +291,28 @@
     //function to delete a car from the database
     if(isset($_POST['submitElimina'])){
         $idToDelete = $_POST['check'];
-        foreach($idToDelete as $id){
-            $sql = "UPDATE car SET deleted = 1 WHERE id = $id";
-    
-            if (mysqli_query($conn, $sql)) {
-    
-                echo "Record aggiornato con successo" . "<br>";
-    
-            } else {
-    
-                echo "Errore nell'aggiornamento del record: " . mysqli_error($conn) . "<br>";
-    
+        if(empty($idToDelete)){
+            echo "<script type='text/javascript'>alert('nessun veicolo selezionato');</script>";
+            echo "<script type='text/javascript'>window.location.href = 'index.php';</script>";
+        }
+        else{
+            foreach($idToDelete as $id){
+                $sql = "UPDATE car SET deleted = 1 WHERE id = $id";
+        
+                if (mysqli_query($conn, $sql)) {
+        
+                    echo "Record aggiornato con successo" . "<br>";
+        
+                } else {
+        
+                    echo "Errore nell'aggiornamento del record: " . mysqli_error($conn) . "<br>";
+        
+                }
             }
         }
         
         //var_dump($targaToDelete);
-        printCars($conn);
+        //printCars($conn);
         /*
         $file = fopen('data.txt', 'r');
         $tempFile = fopen('temp.txt', 'w');
@@ -391,9 +397,77 @@
         }/
     }*/
     
+
+
+    if(isset($_POST['submitRicerca'])){
+        $elementToSearch =$_POST["Ricerca"];
+        
+        //$file = fopen('data.txt', 'r');
+        
+        //$found = false;
+
+        $sql2 = "SELECT * FROM Marche where nome LIKE  '%$elementToSearch%'";
+        
+        $result = mysqli_query($conn, $sql2);
+    
+        if ($elementToSearch=='*'){
+            $sql = "SELECT * FROM car where deleted = 0";
+        }
+        else{
+            if (mysqli_num_rows($result) > 0) {
+                $marca1 = $result->fetch_assoc();
+                $marca1 = $marca1["id"];
+            } else {
+                $marca1 = -1;
+            }
+
+            $sql = "SELECT * FROM car where (targa Like '%$elementToSearch%' or marca = $marca1 or modello like '%$elementToSearch%' or posti = '$elementToSearch') and deleted = 0";
+        }
+        $result = mysqli_query($conn, $sql);
+        
+        
+        if (mysqli_num_rows($result) > 0) {
+
+            echo "<form action='index.php' method='post'>";
+            echo "<table>";
+            echo "<tr>";
+            echo "<th>Targa</th>";
+            echo "<th>Marca</th>";
+            echo "<th>Modello</th>";
+            echo "<th>Numero Posti</th>";
+            echo "<th><input type='checkbox' name='checkAll' id='checkAll' onChange='selezionaTutto()'></th>";
+            echo "</tr>";
+
+            foreach ($result as $r) {
+                $marca = $r["marca"];
+                $sql = "SELECT * FROM Marche where id = $marca";
+        
+                $result2 = mysqli_query($conn, $sql);
+        
+                $r2 = $result2->fetch_assoc();
+                echo "<tr>";
+                echo "<td>" . $r["targa"] . "</td>";
+                echo "<td>" . $r2["nome"] . "</td>";
+                echo "<td>" . $r["modello"] . "</td>";
+                echo "<td>" . $r["posti"] . "</td>";
+                echo "<td><input type='checkbox' name='check[]' value='" . $r["id"] . "'></td>";
+                echo "</tr>";
+            
+            }
+            echo "</table>";
+            echo "<input type='submit' name='submitElimina' value='Elimina' id='elimina'>";
+            echo "</form>";
+            
+        
+        } else {
+        
+            echo "Nessun risultato trovato" . "<br>";
+        
+        }
+        
     
     echo "</div>";
     mysqli_close($conn);
-
+    }
     
 ?>
