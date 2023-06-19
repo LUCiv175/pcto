@@ -1,30 +1,13 @@
 <?php
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
- 
-    $servername = "";
-        
-    $username = "";
-        
-    $password = "";
-        
-    $dbname = "";
-        
-        
-        
-    // Connessione al database
-        
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-        
+    include "conn.php";
 
-        
-    // Verifica della connessione
-        
-    if (!$conn) {
-        
-        die("Connessione al database fallita: " . mysqli_connect_error());
-        
+    $modelli = array();
+    $sql = "SELECT * FROM modelli ";
+    $result = mysqli_query($conn, $sql);
+    while ($row = $result->fetch_assoc()) {
+        $modelli[] = $row;
     }
+
   
 ?>
 
@@ -33,7 +16,7 @@
 
 <head>
     <title>Autonoleggio</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="stle.css">
     <link rel="icon" type="image" href="https://upload.wikimedia.org/wikipedia/it/thumb/e/ed/SSC_Napoli_2007.svg/1200px-SSC_Napoli_2007.svg.png">
     
 </head>
@@ -47,7 +30,7 @@
         <label>Targa:</label>
         <input type="text" name="targa" required><br>
         <label>Marca:</label>
-        <select name="marca" required>
+        <select name="marca" required id="selectMarca">
             <option disabled selcted value>Marca...</option>
             <?php
                 $sql = "SELECT * FROM Marche ";
@@ -58,9 +41,23 @@
             ?>
         </select>
         <label>Modello:</label>
-        <input type="text" name="modello" required><br>
+        <select id='selectModello' name="modello">
+            <option disabled selcted value>Modello...</option>
+            
+        </select>
         <label>Numero Posti:</label>
-        <input type="number" name="nPosti" required><br>
+        <select name="nPosti" required>
+            <option disabled selcted value>Numero Posti...</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+        </select>
         <input type="submit" name="submitInserisci" value="Aggiungi Veicolo">
     </form>
     <form action="index.php" method="post">
@@ -85,6 +82,76 @@
             }else{
                 for(let i = 0; i < check.length; i++){
                     check[i].checked = false;
+                }
+            }
+        }
+
+        <?php
+            $cleanArray = array();
+            foreach($modelli as $element){
+                $cleanElement = mb_convert_encoding($element, 'UTF-8', 'UTF-8');
+                $cleanArray[] = $cleanElement;
+            }
+            $json = json_encode($cleanArray, true);
+            if($json === false){
+                $jsonError = json_last_error();
+                switch($jsonError){
+                    case JSON_ERROR_NONE:
+                        echo ' - Nessun errore';
+                    break;
+                    case JSON_ERROR_DEPTH:
+                        echo ' - Sforato la profondità massima';
+                    break;
+                    case JSON_ERROR_STATE_MISMATCH:
+                        echo ' - Sottodimensionamento o mismatch dei modi';
+                    break;
+                    case JSON_ERROR_CTRL_CHAR:
+                        echo " - Errore carattere di controllo, probabilmente codificato in UTF-8 ma non correttamente";
+                    break;
+                    case JSON_ERROR_SYNTAX:
+                        echo ' - Errore di sintassi';
+                    break;
+                    case JSON_ERROR_UTF8:
+                        echo ' - Carattere UTF-8 malformato, probabilmente codificato in UTF-8 ma non correttamente';
+                    break;
+                    case JSON_ERROR_RECURSION:
+                        echo ' - Una o più referenze ricorsive nel valore da codificare';
+                    break;
+                    case JSON_ERROR_INF_OR_NAN:
+                        echo ' - Uno o più valori NAN o INF nel valore da codificare';
+                    break;
+                    case JSON_ERROR_UNSUPPORTED_TYPE:
+                        echo ' - Un valore di un tipo non supportato è stato dato, come un resource';
+                    break;
+                    case JSON_ERROR_INVALID_PROPERTY_NAME:
+                        echo ' - Un nome di proprietà codificato in UTF-8 non è valido';
+                    break;
+                    case JSON_ERROR_UTF16:
+                        echo ' - Carattere UTF-16 malformato, probabilmente codificato in UTF-8 ma non correttamente';
+                    break;
+                    default:
+                        echo ' - Errore sconosciuto';
+                }
+            }
+        ?>
+        let modelli = <?php echo $json; ?>;
+        let selectMarca = document.getElementById("selectMarca");
+        selectMarca.onchange = () =>{
+            let marca = selectMarca.value;
+            let selectModello = document.getElementById("selectModello");
+            selectModello.innerHTML = "";
+            let option = document.createElement("option");
+            option.disabled = true;
+            option.selected = true;
+            option.value = "";
+            option.innerHTML = "Modello...";
+            selectModello.appendChild(option);
+            for(let i = 0; i < modelli.length; i++){
+                if(modelli[i].id_marca === marca){
+                    let option = document.createElement("option");
+                    option.value = modelli[i].id;
+                    option.innerHTML = modelli[i].modello;
+                    selectModello.appendChild(option);
                 }
             }
         }
@@ -207,7 +274,7 @@
                 echo "<td>" . $r2["nome"] . "</td>";
                 echo "<td>" . $r["modello"] . "</td>";
                 echo "<td>" . $r["posti"] . "</td>";
-                echo "<td><input type='checkbox' name='check[]' value='" . $r["id"] . "'></td>";
+                echo "<td><input type='checkbox' name='check[]' value='" . $r["targa"] . "'></td>";
                 echo "</tr>";
             
                 }
@@ -232,15 +299,13 @@
         $targa =$_POST["targa"];
         //$marca = str_replace(' ', '_',$_POST["marca"]);
         $idMarca =$_POST["marca"];
-        $modello = str_replace(' ', '_',$_POST["modello"]);
+        $idModello = $_POST["modello"];
         $nPosti =$_POST["nPosti"];
-        
-
       
 
         // Esempio di INSERT
 
-        $sql = "INSERT INTO car (targa, marca, modello, posti) VALUES ('$targa', $idMarca, '$modello', $nPosti)";
+        $sql = "INSERT INTO car (targa, id_marca, id_modello, posti) VALUES ('$targa', $idMarca, '$idModello', $nPosti)";
 
  
 
@@ -291,6 +356,7 @@
     //function to delete a car from the database
     if(isset($_POST['submitElimina'])){
         $idToDelete = $_POST['check'];
+        var_dump($idToDelete);
         if(empty($idToDelete)){
             echo "<script type='text/javascript'>alert('nessun veicolo selezionato');</script>";
             echo "<script type='text/javascript'>window.location.href = 'index.php';</script>";
@@ -298,7 +364,6 @@
         else{
             foreach($idToDelete as $id){
                 $sql = "UPDATE car SET deleted = 1 WHERE id = $id";
-        
                 if (mysqli_query($conn, $sql)) {
         
                     echo "Record aggiornato con successo" . "<br>";
@@ -406,14 +471,28 @@
         
         //$found = false;
 
+        /*
+
         $sql2 = "SELECT * FROM Marche where nome LIKE  '%$elementToSearch%'";
         
         $result = mysqli_query($conn, $sql2);
+        $sql3 = "SELECT * FROM modelli where nome='$elementToSearch'";
+        
+        $result2 = mysqli_query($conn, $sql3);
     
         if ($elementToSearch=='*'){
             $sql = "SELECT * FROM car where deleted = 0";
         }
         else{
+
+            if (mysqli_num_rows($result2) > 0) {
+                $modello1 = $result2->fetch_assoc();
+                $modello1 = $modello1["id"];
+            } else {
+                $modello1 = -1;
+            }
+
+
             if (mysqli_num_rows($result) > 0) {
                 $marca1 = $result->fetch_assoc();
                 $marca1 = $marca1["id"];
@@ -421,12 +500,31 @@
                 $marca1 = -1;
             }
 
-            $sql = "SELECT * FROM car where (targa Like '%$elementToSearch%' or marca = $marca1 or modello like '%$elementToSearch%' or posti = '$elementToSearch') and deleted = 0";
+            $sql = "SELECT * FROM car where (targa Like '%$elementToSearch%' or marca = $marca1 or modello=$modello1 or posti = '$elementToSearch') and deleted = 0";
         }
         $result = mysqli_query($conn, $sql);
+    
+        */
         
-        
-        if (mysqli_num_rows($result) > 0) {
+        if ($elementToSearch=='*'){
+            $sql = "SELECT * FROM ((modelli inner join Marche on Marche.id = modelli.id_marca) inner join car on modelli.id = car.id_modello) where deleted = 0;";
+        }
+        else{
+            $sql = "SELECT * FROM 
+            car inner join Marche on Marche.id = car.id_marca 
+            inner join modelli on modelli.id = car.id_modello 
+            where (targa Like '%$elementToSearch%' or Marche.nome Like '%$elementToSearch%' or modelli.modello Like '%$elementToSearch%' or posti = '$elementToSearch') and deleted = 0";
+        }$result = mysqli_query($conn, $sql);  
+        //var_dump($result);
+        /*
+        if ($result) {
+            $num_rows = mysqli_num_rows($result);
+            echo "Numero di righe: " . $num_rows;
+        } else {
+            echo "Errore nella query: " . mysqli_error($conn);
+        }*/
+        //echo $sql;
+        if(mysqli_num_rows($result) > 0) {
 
             echo "<form action='index.php' method='post'>";
             echo "<table>";
@@ -435,22 +533,37 @@
             echo "<th>Marca</th>";
             echo "<th>Modello</th>";
             echo "<th>Numero Posti</th>";
+            echo "<th>Anno</th>";
             echo "<th><input type='checkbox' name='checkAll' id='checkAll' onChange='selezionaTutto()'></th>";
             echo "</tr>";
 
             foreach ($result as $r) {
+                //var_dump($r);
+                /*
                 $marca = $r["marca"];
                 $sql = "SELECT * FROM Marche where id = $marca";
-        
                 $result2 = mysqli_query($conn, $sql);
-        
                 $r2 = $result2->fetch_assoc();
+                $modello = $r["modello"];
+                $sql = "SELECT * FROM modelli where id = $modello";
+                $result2 = mysqli_query($conn, $sql);
+                $r3 = $result2->fetch_assoc();
                 echo "<tr>";
                 echo "<td>" . $r["targa"] . "</td>";
                 echo "<td>" . $r2["nome"] . "</td>";
-                echo "<td>" . $r["modello"] . "</td>";
+                echo "<td>" . $r3["modello"] . "</td>";
                 echo "<td>" . $r["posti"] . "</td>";
                 echo "<td><input type='checkbox' name='check[]' value='" . $r["id"] . "'></td>";
+                echo "</tr>";
+                */
+                echo "<tr>";
+                echo "<td>" . $r["targa"] . "</td>";
+                echo "<td>" . $r["nome"] . "</td>";
+                echo "<td>" . $r["modello"] . "</td>";
+                echo "<td>" . $r["posti"] . "</td>";
+                echo "<td>" . $r["anno"] . "</td>";
+
+                echo "<td><input type='checkbox' id='checkElimina' name='check[]' value='" . $r["id"] . "'></td>";
                 echo "</tr>";
             
             }
@@ -464,10 +577,9 @@
             echo "Nessun risultato trovato" . "<br>";
         
         }
-        
-    
+    }
     echo "</div>";
     mysqli_close($conn);
-    }
     
+
 ?>

@@ -1,5 +1,5 @@
 body{
-    background-image: url('https://rare-gallery.com/uploads/posts/566084-koenigsegg-agera.jpg');
+    background-image: url('https://i.etsystatic.com/40485572/r/il/b4c1fa/4596986979/il_fullxfull.4596986979_oowp.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -48,6 +48,8 @@ form{
     justify-content: center;
     align-items: center;
     margin-top: 2vh;
+    width: 100%;
+
 }
 
 table{
@@ -79,6 +81,7 @@ input[type=text], input[type=password]{
     font-size: 20px;
     font-weight: 700;
     text-align: center;
+    max-width: 310px;
 }
 
 h2{
@@ -122,6 +125,7 @@ input[type=submit]{
     font-weight: 700;
     text-align: center;
     transition: 0.7s;
+    width: 20vw;
 }
 select{
     width: 100%;
@@ -180,6 +184,7 @@ input[type=submit]:hover{
     text-align: center;
     scale: 1.1;
     transition: 0.7s;
+    width: 20vw;
 }
 input[type=checkbox] {
     position: relative;
@@ -231,4 +236,136 @@ input[type=checkbox]:checked:after {
         margin-left: 0px;
         margin-right: 0px;
     }
+}
+
+a{
+    text-decoration: none;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    transition: 0.7s;
+}
+button:hover{
+    background-color: #FFA500;
+    background: linear-gradient(to right, #FFA500 0%, #CFCF08 100%);
+    color: #fff;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    scale: 1.1;
+    transition: 0.7s;
+    margin-top: 5vh;
+}
+button{
+    width: 100%;
+    background-color: #CFCF08;
+    background: linear-gradient(to right, #CFCF08 0%, #FFA500 100%);
+    color: #fff;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    transition: 0.7s;
+    max-width: 310px;
+    margin-top: 5vh;
+}
+#logOut{
+    width: 100%;
+    background: #FC801D;
+    background: linear-gradient(to right, #FC801D 0%, #C2031F 100%);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    transition: 0.7s;
+    max-width: 310px;
+    margin-bottom: 5vh;
+}
+#logOut:hover{
+    transition: 0.7s;
+    background: #C2031F;
+    background: linear-gradient(to right, #C2031F 0%, #FC801D 100%);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    max-width: 310px;
+    margin-bottom: 5vh;
+}
+.edit{
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    transition: 0.7s;
+    max-width: 310px;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+}
+#filterSub{
+    margin-bottom: 5vh;
+}
+#home1{
+    background: #FC801D;
+    background: linear-gradient(to right, #FC801D 0%, #C2031F 100%);
+}
+#home1:hover{
+    background: #C2031F;
+    background: linear-gradient(to right, #C2031F 0%, #FC801D 100%);
+}
+#logOut1{
+    
+    width: 100%;
+    background: #FC801D;
+    background: linear-gradient(to right, #FC801D 0%, #C2031F 100%);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    transition: 0.7s;
+    max-width: 310px;
+    margin-bottom: 5vh;
+    margin-top: 5vh;
+}
+#logOut1:hover{
+    
+    transition: 0.7s;
+    background: #C2031F;
+    background: linear-gradient(to right, #C2031F 0%, #FC801D 100%);
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    max-width: 310px;
+    margin-bottom: 5vh;
+    margin-top: 5vh;
 }
