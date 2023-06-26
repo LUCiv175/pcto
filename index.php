@@ -16,12 +16,12 @@
 
 <head>
     <title>Autonoleggio</title>
-    <link rel="stylesheet" href="stle.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image" href="https://upload.wikimedia.org/wikipedia/it/thumb/e/ed/SSC_Napoli_2007.svg/1200px-SSC_Napoli_2007.svg.png">
     
 </head>
 
-<body>
+<body onload="ricerca2()">
     <div class="sito">
     <h1>Autonoleggio</h1>
 
@@ -64,14 +64,66 @@
         <!---<input type="text" name="Elimina" required><br>
         <input type="submit" name="submitElimina" value="Elimina" id="elimina">-->
     </form>
+    <form>
+    <label>Filtra:</label>
+    <input type="text" name="Ricerca" id='ricerca' value=""><br></form>
     <form action="index.php" method="post">
-        <input type="text" name="Ricerca" required><br>
-        <input type="submit" name="submitRicerca" value="Ricerca">
+        
+        <table id="tableRicerca">
+            <tr>
+                <th>Targa</th>
+                <th>Marca</th>
+                <th>Modello</th>
+                <th>Numero Posti</th>
+                <th>Anno</th>
+                <th><input type="checkbox" name="checkAll" id="checkAll" onclick="selezionaTutto()" 0></th>
+            </tr>
+        </table>
+        <input type="submit" name="submitElimina" value="Elimina" id="elimina">
     </form>
+        
     <!--show all cars
     <form action="index.php" method="post">
     <input type="submit" name="submitInventario" value="Mostra Inventario"></form>-->
     <script>
+    
+        ricerca = document.getElementById("ricerca");
+        ricerca.addEventListener("keyup", ricerca2);
+        function ricerca2(){
+            const str = ricerca.value;
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function(){
+                $json = JSON.parse(this.responseText);
+                var text = "";
+                text += "<tr>";
+                text += "<th>Targa</th>";
+                text += "<th>Marca</th>";
+                text += "<th>Modello</th>";
+                text += "<th>Numero Posti</th>";
+                text += "<th>Anno</th>";
+                text += "<th><input type='checkbox' name='checkAll' id='checkAll' onclick='selezionaTutto()' 0></th>";
+                text += "</tr>";
+
+                for(let i = 0; i < $json.length; i++){
+                    var single_json = $json[i];
+                    var text_temp = "";
+                    text_temp += "<tr>";
+                    text_temp += "<td>" + single_json.targa + "</td>";
+                    text_temp += "<td>" + single_json.marca + "</td>";
+                    text_temp += "<td>" + single_json.modello + "</td>";
+                    text_temp += "<td>" + single_json.posti + "</td>";
+                    text_temp += "<td>" + single_json.anno + "</td>";
+                    text_temp += "<td><input type='checkbox' name='check[]' value='" + single_json.id + "'></td>";
+                    text_temp += "</tr>";
+                    text += text_temp;
+                }
+                document.getElementById('tableRicerca').innerHTML = text;
+            }
+            xhttp.open("GET", "script.php?q=" + str, true);
+            xhttp.send();
+        }
+        
+        
         let selezionaTutto = () =>{
             let checkAll = document.getElementById("checkAll");
             let check = document.getElementsByName("check[]");
@@ -155,6 +207,9 @@
                 }
             }
         }
+
+
+
     </script>
     </body>
 <?php
@@ -356,7 +411,7 @@
     //function to delete a car from the database
     if(isset($_POST['submitElimina'])){
         $idToDelete = $_POST['check'];
-        var_dump($idToDelete);
+        //var_dump($idToDelete);
         if(empty($idToDelete)){
             echo "<script type='text/javascript'>alert('nessun veicolo selezionato');</script>";
             echo "<script type='text/javascript'>window.location.href = 'index.php';</script>";
@@ -366,7 +421,8 @@
                 $sql = "UPDATE car SET deleted = 1 WHERE id = $id";
                 if (mysqli_query($conn, $sql)) {
         
-                    echo "Record aggiornato con successo" . "<br>";
+                    echo "<script type='text/javascript'>alert('veicolo eliminato con successo');</script>";
+                    echo "<script type='text/javascript'>window.location.href = 'index.php';</script>";
         
                 } else {
         
@@ -375,6 +431,7 @@
                 }
             }
         }
+        
         
         //var_dump($targaToDelete);
         //printCars($conn);
@@ -461,9 +518,49 @@
             echo "<script type='text/javascript'>alert('Veicolo non trovato');</script>";
         }/
     }*/
-    
 
+/*
+    $ricerca = $_REQUEST['q'];
+    if(empty($ricerca)){
+        $sql = "SELECT * FROM ((modelli inner join Marche on Marche.id = modelli.id_marca) inner join car on modelli.id = car.id_modello) where deleted = 0";
+    }
+    else{
+        $sql = "SELECT * FROM 
+        car inner join Marche on Marche.id = car.id_marca 
+        inner join modelli on modelli.id = car.id_modello 
+        where (targa Like '%$ricerca%' or Marche.nome Like '%$ricerca%' or modelli.modello Like '%$ricerca%' or posti = '$ricerca') and deleted = 0";
+    }
+    $result = mysqli_query($conn, $sql);
+    $json = array();
+    if (mysqli_num_rows($result) > 0) {
+            /*
+            echo "<form action='index.php' method='post'>";
+            echo "<table id='tableRicerca'>";
+            echo "<tr>";
+            echo "<th>Targa</th>";
+            echo "<th>Marca</th>";
+            echo "<th>Modello</th>";
+            echo "<th>Numero Posti</th>";
+            echo "<th>Anno</th>";
+            echo "<th><input type='checkbox' name='checkAll' id='checkAll' onChange='selezionaTutto()'></th>";
+            echo "</tr>";
+            
+        while($row = mysqli_fetch_assoc($result)) {
+            $temp = [
+            'id' => $row['id'],
+            'targa' => $row['targa'],
+            'marca' => $row['nome'],
+            'modello' => $row['modello'],
+            'posti' => $row['posti'],
+            'anno' => $row['anno']
+            ];
+            $json[] = $temp;
+        }
+    }
+    echo json_encode($json);
+*/
 
+    /*
     if(isset($_POST['submitRicerca'])){
         $elementToSearch =$_POST["Ricerca"];
         
@@ -504,7 +601,7 @@
         }
         $result = mysqli_query($conn, $sql);
     
-        */
+        /
         
         if ($elementToSearch=='*'){
             $sql = "SELECT * FROM ((modelli inner join Marche on Marche.id = modelli.id_marca) inner join car on modelli.id = car.id_modello) where deleted = 0;";
@@ -522,12 +619,14 @@
             echo "Numero di righe: " . $num_rows;
         } else {
             echo "Errore nella query: " . mysqli_error($conn);
-        }*/
+        }/
         //echo $sql;
-        if(mysqli_num_rows($result) > 0) {
 
+        $json = array();
+        if (mysqli_num_rows($result) > 0) {
+            /*
             echo "<form action='index.php' method='post'>";
-            echo "<table>";
+            echo "<table id='tableRicerca'>";
             echo "<tr>";
             echo "<th>Targa</th>";
             echo "<th>Marca</th>";
@@ -536,6 +635,24 @@
             echo "<th>Anno</th>";
             echo "<th><input type='checkbox' name='checkAll' id='checkAll' onChange='selezionaTutto()'></th>";
             echo "</tr>";
+            /
+            while($row = mysqli_fetch_assoc($result)) {
+                $temp = [
+                'id' => $row['id'],
+                'targa' => $row['targa'],
+                'marca' => $row['nome'],
+                'modello' => $row['modello'],
+                'posti' => $row['posti'],
+                'anno' => $row['anno']
+                ];
+                $json[] = $temp;
+            }
+        }
+        echo json_encode($json);
+        /*
+        if(mysqli_num_rows($result) > 0) {
+
+            
 
             foreach ($result as $r) {
                 //var_dump($r);
@@ -555,7 +672,7 @@
                 echo "<td>" . $r["posti"] . "</td>";
                 echo "<td><input type='checkbox' name='check[]' value='" . $r["id"] . "'></td>";
                 echo "</tr>";
-                */
+                /
                 echo "<tr>";
                 echo "<td>" . $r["targa"] . "</td>";
                 echo "<td>" . $r["nome"] . "</td>";
@@ -577,7 +694,8 @@
             echo "Nessun risultato trovato" . "<br>";
         
         }
-    }
+        /
+    }*/
     echo "</div>";
     mysqli_close($conn);
     
